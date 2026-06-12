@@ -23,7 +23,7 @@ public sealed class SillyTavernOptions
         if (!Uri.TryCreate(normalizedBaseUrl, UriKind.Absolute, out var parsedBaseUrl))
         {
             throw new InvalidOperationException(
-                "SILLY_TAVERN_BASE_URL must be an absolute URL, for example http://127.0.0.1:8000.");
+                $"SILLY_TAVERN_BASE_URL must be an absolute URL (received: '{normalizedBaseUrl}'), for example http://127.0.0.1:8000.");
         }
 
         return new SillyTavernOptions(parsedBaseUrl, apiKey);

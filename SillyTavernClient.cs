@@ -41,7 +41,7 @@ public sealed class SillyTavernClient
         if (!response.IsSuccessStatusCode)
         {
             throw new InvalidOperationException(
-                $"SillyTavern request to '{relativePath}' failed with status {(int)response.StatusCode}: {body}");
+                $"SillyTavern request to '{relativePath}' failed with status {(int)response.StatusCode} ({response.ReasonPhrase}).");
         }
 
         return TryFormatJson(body);
