@@ -43,7 +43,7 @@ public sealed class SillyTavernClient
     {
         if (string.IsNullOrWhiteSpace(responseBody))
         {
-            return string.Empty;
+            return EmptyJsonObject;
         }
 
         try
