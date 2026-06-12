@@ -1,10 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 using SillyTavernMCP;
 
 var builder = Host.CreateApplicationBuilder(args);
-
+builder.Logging.AddConsole(consoleLogOptions =>
+{
+    // Configure all logs to go to stderr
+    consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace;
+});
 builder.Services.AddSingleton(_ => SillyTavernOptions.LoadFromEnvironment());
 builder.Services.AddHttpClient<SillyTavernClient>((serviceProvider, httpClient) =>
 {
@@ -17,9 +22,10 @@ builder.Services.AddHttpClient<SillyTavernClient>((serviceProvider, httpClient) 
     {
         httpClient.DefaultRequestHeaders.Add("X-API-KEY", options.ApiKey);
     }
+    httpClient.GetAsync("/csrf-token").GetAwaiter().GetResult(); // Pre-fetch CSRF token to validate connection and fail fast if misconfigured.
 });
 builder.Services.AddMcpServer()
     .WithStdioServerTransport()
-    .WithTools<SillyTavernTools>();
+    .WithToolsFromAssembly();
 
 await builder.Build().RunAsync();
