@@ -22,6 +22,7 @@ Set these environment variables before starting the server:
 ## Run
 
 ```bash
+cd src
 dotnet run
 ```
 
