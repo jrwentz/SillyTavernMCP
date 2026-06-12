@@ -69,7 +69,7 @@ public sealed class SillyTavernClient
     internal void Initialize()
     {
         _logger.LogInformation("Initializing SillyTavernClient and retrieving CSRF token.");
-        var response = _httpClient.GetAsync("/csrf-token").GetAwaiter().GetResult();
+        using var response = _httpClient.GetAsync("/csrf-token").GetAwaiter().GetResult();
         var tokenJson = JsonNode.Parse(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
         var token = tokenJson?["token"];
         _token = token?.ToString();
