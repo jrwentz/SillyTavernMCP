@@ -6,7 +6,11 @@ using SillyTavernMCP;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddSingleton(_ => SillyTavernOptions.LoadFromEnvironment());
-builder.Services.AddSingleton<SillyTavernClient>();
+builder.Services.AddHttpClient<SillyTavernClient>((serviceProvider, httpClient) =>
+{
+    var options = serviceProvider.GetRequiredService<SillyTavernOptions>();
+    httpClient.BaseAddress = options.BaseUrl;
+});
 builder.Services.AddMcpServer()
     .WithStdioServerTransport()
     .WithTools<SillyTavernTools>();

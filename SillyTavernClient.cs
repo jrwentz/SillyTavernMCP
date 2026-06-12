@@ -9,12 +9,9 @@ public sealed class SillyTavernClient
     private static readonly JsonSerializerOptions JsonWriterOptions = new() { WriteIndented = true };
     private readonly HttpClient _httpClient;
 
-    public SillyTavernClient(SillyTavernOptions options)
+    public SillyTavernClient(HttpClient httpClient, SillyTavernOptions options)
     {
-        _httpClient = new HttpClient
-        {
-            BaseAddress = options.BaseUrl,
-        };
+        _httpClient = httpClient;
 
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("SillyTavernMCP/1.0");
@@ -54,7 +51,7 @@ public sealed class SillyTavernClient
     {
         if (string.IsNullOrWhiteSpace(responseBody))
         {
-            return responseBody;
+            return string.Empty;
         }
 
         try
