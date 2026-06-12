@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -6,20 +5,13 @@ namespace SillyTavernMCP;
 
 public sealed class SillyTavernClient
 {
+    private const string EmptyJsonObject = "{}";
     private static readonly JsonSerializerOptions JsonWriterOptions = new() { WriteIndented = true };
     private readonly HttpClient _httpClient;
 
-    public SillyTavernClient(HttpClient httpClient, SillyTavernOptions options)
+    public SillyTavernClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
-
-        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("SillyTavernMCP/1.0");
-
-        if (!string.IsNullOrWhiteSpace(options.ApiKey))
-        {
-            _httpClient.DefaultRequestHeaders.Add("X-API-KEY", options.ApiKey);
-        }
     }
 
     public Task<string> GetSettingsAsync() => PostAsync("/api/settings/get");
@@ -32,7 +24,7 @@ public sealed class SillyTavernClient
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, relativePath)
         {
-            Content = new StringContent("{}", Encoding.UTF8, "application/json"),
+            Content = new StringContent(EmptyJsonObject, Encoding.UTF8, "application/json"),
         };
 
         using var response = await _httpClient.SendAsync(request);
